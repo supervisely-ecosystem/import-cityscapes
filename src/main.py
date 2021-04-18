@@ -1,44 +1,143 @@
-# coding: utf-8
-
 import os
-import glob
-import json
-
+import zipfile, json
 import supervisely_lib as sly
+import glob
+from supervisely_lib.io.fs import download, file_exists, get_file_name, get_file_name_with_ext
+from supervisely_lib.imaging.color import generate_rgb
 
 
 my_app = sly.AppService()
 TEAM_ID = int(os.environ['context.teamId'])
 WORKSPACE_ID = int(os.environ['context.workspaceId'])
-
-
-
-
+INPUT_DIR = os.environ.get("modal.state.slyFolder")
+INPUT_FILE = os.environ.get("modal.state.slyFile")
+PROJECT_NAME = 'cityscapes'
 IMAGE_EXT = '.png'
+logger = sly.logger
+
+city_classes_to_colors = {'unlabeled': (0, 0, 0),
+                                'ego vehicle': (0, 0, 0),
+                                'rectification border': (0, 0, 0),
+                                'out of roi': (0, 0, 0),
+                                'static': (0, 0, 0),
+                                'dynamic': (111, 74, 0),
+                                'ground': ( 81, 0, 81),
+                                'road': (128, 64, 128),
+                                'sidewalk': (244, 35, 232),
+                                'parking': (250, 170, 160),
+                                'rail track': (230, 150, 140),
+                                'building': (70, 70, 70),
+                                'wall': (102, 102, 156),
+                                'fence': (190, 153, 153),
+                                'guard rail': (180, 165, 180),
+                                'bridge': (150, 100, 100),
+                                'tunnel': (150, 120, 90),
+                                'pole': (153, 153, 153),
+                                'polegroup': (153, 153, 153),
+                                'traffic light': (250, 170, 30),
+                                'traffic sign': (220, 220, 0),
+                                'vegetation': (107, 142, 35),
+                                'terrain': (152, 251, 152),
+                                'sky': (70, 130, 180),
+                                'person': (220, 20, 60),
+                                'rider': (255, 0, 0),
+                                'car': (0, 0, 142),
+                                'truck': (0, 0, 70),
+                                'bus': (0, 60, 100),
+                                'caravan': (0, 0, 90),
+                                'trailer': (0, 0,110),
+                                'train': (0, 80, 100),
+                                'motorcycle': (0, 0, 230),
+                                'bicycle': (119, 11, 32),
+                                'license plate': (0, 0, 142)}
+
+def json_path_to_image_path(json_path):
+    img_path = json_path.replace('/gtFine/', '/leftImg8bit/')
+    img_path = img_path.replace('_gtFine_polygons.json', '_leftImg8bit' + IMAGE_EXT)
+    return img_path
 
 
-class AnnotationConvertionException(Exception):
-    pass
+def convert_points(simple_points):
+    return [sly.PointLocation(int(p[1]), int(p[0])) for p in simple_points]
 
 
-class ImporterCityscapes:
-    def __init__(self):
-        self.settings = json.load(open(sly.TaskPaths.TASK_CONFIG_PATH))
-        self.obj_classes = sly.ObjClassCollection()
-        self.tag_metas = sly.TagMetaCollection()
+@my_app.callback("import_cityscapes")
+@sly.timeit
+def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
+    tag_metas = sly.TagMetaCollection()
+    obj_classes = sly.ObjClassCollection()
+    dataset_names = []
 
-    @classmethod
-    def json_path_to_image_path(cls, json_path):
-        img_path = json_path.replace('/gtFine/', '/leftImg8bit/')
-        img_path = img_path.replace('_gtFine_polygons.json', '_leftImg8bit' + IMAGE_EXT)
-        return img_path
+    storage_dir = my_app.data_dir
 
-    @staticmethod
-    def convert_points(simple_points):
-        # TODO: Maybe use row_col_list_to_points here?
-        return [sly.PointLocation(int(p[1]), int(p[0])) for p in simple_points]
+    if INPUT_DIR:
+        project_name = PROJECT_NAME
+        cur_files_path = INPUT_DIR
+        extract_dir = os.path.join(storage_dir, cur_files_path)
+        archive_path = os.path.join(storage_dir, project_name + '.zip')
+    else:
+        cur_files_path = INPUT_FILE
+        extract_dir = os.path.join(storage_dir, get_file_name(cur_files_path))
+        archive_path = os.path.join(storage_dir, get_file_name_with_ext(cur_files_path))
+        project_name = get_file_name_with_ext(INPUT_FILE)
 
-    def _load_cityscapes_annotation(self, orig_img_path, orig_ann_path) -> sly.Annotation:
+    api.file.download(TEAM_ID, cur_files_path, archive_path)
+
+    if zipfile.is_zipfile(archive_path):
+        logger.info('Extract archive {}'.format(archive_path))
+        with zipfile.ZipFile(archive_path, 'r') as zip_ref:
+            zip_ref.extractall(extract_dir)
+    else:
+        raise Exception("No such file".format(project_name + 'zip'))
+
+    new_project = api.project.create(WORKSPACE_ID, project_name, change_name_if_conflict=True)
+    search_fine = os.path.join(extract_dir, "gtFine", "*", "*", "*_gt*_polygons.json")
+    files_fine = glob.glob(search_fine)
+    files_fine.sort()
+
+    search_imgs = os.path.join(extract_dir, "leftImg8bit", "*", "*", "*_leftImg8bit" + IMAGE_EXT)
+    files_imgs = glob.glob(search_imgs)
+    files_imgs.sort()
+
+    if len(files_fine) == 0 or len(files_imgs) == 0:
+        raise Exception('Input cityscapes format not correct')
+
+    samples_count = len(files_fine)
+    progress = sly.Progress('Project: {!r}'.format(new_project.name), samples_count)
+
+    images_pathes_for_compare = []
+    images_pathes = {}
+    images_names = {}
+    anns_data = {}
+    ds_name_to_id = {}
+    for orig_ann_path in files_fine:
+        parent_dir, json_filename = os.path.split(os.path.abspath(orig_ann_path))
+
+        dataset_name = os.path.basename(parent_dir)
+        if dataset_name not in dataset_names:
+            dataset_names.append(dataset_name)
+            ds = api.dataset.create(new_project.id, dataset_name, change_name_if_conflict=True)
+            ds_name_to_id[dataset_name] = ds.id
+            images_pathes[dataset_name] = []
+            images_names[dataset_name] = []
+            anns_data[dataset_name] = []
+
+        orig_img_path = json_path_to_image_path(orig_ann_path)
+        images_pathes_for_compare.append(orig_img_path)
+        if not file_exists(orig_img_path):
+            logger.warn('Image for annotation {} not found is dataset {}'.format(orig_ann_path.split('/')[-1], dataset_name))
+            continue
+        images_pathes[dataset_name].append(orig_img_path)
+        images_names[dataset_name].append(sly.io.fs.get_file_name_with_ext(orig_img_path))
+
+        tag_path = os.path.split(parent_dir)[0]
+        train_val_tag = os.path.basename(tag_path)
+
+        tag_meta = sly.TagMeta(train_val_tag, sly.TagValueType.NONE)
+        if not tag_metas.has_key(tag_meta.name):
+            tag_metas = tag_metas.add(tag_meta)
+        tag = sly.Tag(tag_meta)
+
         json_data = json.load(open(orig_ann_path))
         ann = sly.Annotation.from_img_path(orig_img_path)
 
@@ -51,98 +150,57 @@ class ImporterCityscapes:
                 polygon = obj['polygon']
                 interiors = []
 
-            interiors = [self.convert_points(interior) for interior in interiors]
-            polygon = sly.Polygon(self.convert_points(polygon), interiors)
-            obj_class = sly.ObjClass(name=class_name, geometry_type=sly.Polygon, color=sly.color.random_rgb())
-            ann = ann.add_label(sly.Label(polygon, obj_class))
-            if not self.obj_classes.has_key(class_name):
-                self.obj_classes = self.obj_classes.add(obj_class)
-        return ann
-
-    def _generate_sample_annotation(self, orig_img_path, orig_ann_path, train_val_tag):
-        try:
-            tag_meta = sly.TagMeta(train_val_tag, sly.TagValueType.NONE)
-            if not self.tag_metas.has_key(tag_meta.name):
-                self.tag_metas = self.tag_metas.add(tag_meta)
-            tag = sly.Tag(tag_meta)
-            ann = self._load_cityscapes_annotation(orig_img_path, orig_ann_path)
-            ann = ann.add_tag(tag)
-            return ann
-        except Exception:
-            raise AnnotationConvertionException()  # ok, may continue work with another sample
-
-    def convert(self):
-        search_fine = os.path.join(sly.TaskPaths.DATA_DIR, "gtFine", "*", "*", "*_gt*_polygons.json")
-        files_fine = glob.glob(search_fine)
-        files_fine.sort()
-
-        search_imgs = os.path.join(sly.TaskPaths.DATA_DIR, "leftImg8bit", "*", "*", "*_leftImg8bit" + IMAGE_EXT)
-        files_imgs = glob.glob(search_imgs)
-        files_imgs.sort()
-
-        out_project = sly.Project(os.path.join(sly.TaskPaths.RESULTS_DIR, self.settings['res_names']['project']), sly.OpenMode.CREATE)
-
-        samples_count = len(files_fine)
-        progress = sly.Progress('Project: {!r}'.format(out_project.name), samples_count)
-
-        ok_count = 0
-        for orig_ann_path in files_fine:
-            parent_dir, json_filename = os.path.split(os.path.abspath(orig_ann_path))
-
-            dataset_name = os.path.basename(parent_dir)
-            ds = out_project.datasets.get(dataset_name)
-            if ds is None:
-                ds = out_project.create_dataset(dataset_name)
-
-            sample_name = json_filename.replace('_gtFine_polygons.json', IMAGE_EXT)
-            orig_img_path = self.json_path_to_image_path(orig_ann_path)
-
-            tag_path = os.path.split(parent_dir)[0]
-            train_val_tag = os.path.basename(tag_path)  # e.g. train, val, test
-
-            try:
-                ann = self._generate_sample_annotation(orig_img_path, orig_ann_path, train_val_tag)
-
-                if all(os.path.isfile(x) for x in (orig_img_path, orig_ann_path)):
-                    ds.add_item_file(sample_name, orig_img_path, ann=ann)
-                else:
-                    sly.logger.warn('Skipped sample without a complete set of files: {}'.format(sample_name),
-                                    exc_info=False, extra={'sample_name': sample_name,
-                                                           'image_path': orig_img_path,
-                                                           'annotation_path': orig_ann_path})
-
-            except AnnotationConvertionException:
-                sly.logger.warn('Error occurred while processing input sample annotation.',
-                                exc_info=True, extra={'sample_name': sample_name})
-            except Exception:
-                sly.logger.error('Error occurred while processing input sample.',
-                                 exc_info=False, extra={'sample_name': sample_name})
-                raise
+            interiors = [convert_points(interior) for interior in interiors]
+            polygon = sly.Polygon(convert_points(polygon), interiors)
+            if city_classes_to_colors.get(class_name, None):
+                obj_class = sly.ObjClass(name=class_name, geometry_type=sly.Polygon, color=city_classes_to_colors[class_name])
             else:
-                ok_count += 1
-            progress.iter_done_report()
+                obj_class = sly.ObjClass(name=class_name, geometry_type=sly.Polygon, color=generate_rgb(list(city_classes_to_colors.values())))
+            ann = ann.add_label(sly.Label(polygon, obj_class))
+            if not obj_classes.has_key(class_name):
+                obj_classes = obj_classes.add(obj_class)
 
-        stat_dct = {'samples': samples_count, 'src_ann_cnt': len(files_fine), 'src_img_cnt': len(files_imgs)}
+        ann = ann.add_tag(tag)
+        anns_data[dataset_name].append(ann)
 
-        sly.logger.info('Found img/ann pairs.', extra=stat_dct)
-        if stat_dct['samples'] < stat_dct['src_ann_cnt']:
-            sly.logger.warn('Found source annotations without corresponding images.', extra=stat_dct)
+        progress.iter_done_report()
 
-        sly.logger.info('Processed.', extra={'samples': samples_count, 'ok_cnt': ok_count})
+    out_meta = sly.ProjectMeta(obj_classes=obj_classes, tag_metas=tag_metas)
+    api.project.update_meta(new_project.id, out_meta.to_json())
 
-        out_meta = sly.ProjectMeta(obj_classes=self.obj_classes, tag_metas=self.tag_metas)
-        out_project.set_meta(out_meta)
-        sly.logger.info('Found classes.', extra={'cnt': len(self.obj_classes),
-                                                 'classes': sorted([obj_class.name for obj_class in self.obj_classes])})
-        sly.logger.info('Created tags.', extra={'cnt': len(out_meta.tag_metas),
-                                                'tags': sorted([tag_meta.name for tag_meta in out_meta.tag_metas])})
+    for ds_name, ds_id in ds_name_to_id.items():
+        dst_image_infos = api.image.upload_paths(ds_id, images_names[ds_name], images_pathes[ds_name])
+        dst_image_ids = [img_info.id for img_info in dst_image_infos]
+        api.annotation.upload_anns(dst_image_ids, anns_data[ds_name])
+
+    stat_dct = {'samples': samples_count, 'src_ann_cnt': len(files_fine), 'src_img_cnt': len(files_imgs)}
+
+    logger.info('Found img/ann pairs.', extra=stat_dct)
+
+    images_without_anns = set(files_imgs) - set(images_pathes_for_compare)
+    if len(images_without_anns) > 0:
+        logger.warn('Found source images without corresponding annotations:')
+        for im_path in images_without_anns:
+            logger.warn('Annotation not found {}'.format(im_path))
+
+    logger.info('Found classes.', extra={'cnt': len(obj_classes),
+                                             'classes': sorted([obj_class.name for obj_class in obj_classes])})
+    logger.info('Created tags.', extra={'cnt': len(out_meta.tag_metas),
+                                            'tags': sorted([tag_meta.name for tag_meta in out_meta.tag_metas])})
+
+    my_app.stop()
 
 
 def main():
-    importer = ImporterCityscapes()
-    importer.convert()
-    sly.report_import_finished()
+    sly.logger.info("Script arguments", extra={
+        "TEAM_ID": TEAM_ID,
+        "WORKSPACE_ID": WORKSPACE_ID
+    })
+
+    # Run application service
+    my_app.run(initial_events=[{"command": "import_cityscapes"}])
 
 
 if __name__ == '__main__':
-    sly.main_wrapper('CITYSCAPES_IMPORT', main)
+        sly.main_wrapper("main", main)
+
