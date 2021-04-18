@@ -2,12 +2,18 @@
   "name": "import-cityscapes",
   "type": "app",
   "categories": [
-    "Import"
+    "yolov5",
+    "convert format"
   ],
   "description": "Import cityscapes to supervysely",
   "docker_image": "supervisely/base-py-sdk:6.1.62",
   "main_script": "src/app.py",
-  "task_location": "application_sessions",
-  "icon": "https://img.icons8.com/color/96/000000/group.png",
-  "icon_background": "#FFFFFF"
+  "task_location": "workspace_tasks",
+  "icon": "https://i.imgur.com/Zkr2Lix.png",
+  "icon_background": "#FFFFFF",
+  "isolate": true,
+  "headless": true,
+  "context_menu": {
+    "target": ["files_folder", "files_file"]
+  }
 }
