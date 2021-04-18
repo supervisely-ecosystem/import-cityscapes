@@ -34,6 +34,8 @@ logger = sly.logger
 @sly.timeit
 def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
     storage_dir = my_app.data_dir
+    logger.warn(storage_dir)
+    logger.warn(INPUT_DIR)
 
     if INPUT_DIR:
         cur_files_path = INPUT_DIR
