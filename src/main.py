@@ -51,6 +51,9 @@ city_classes_to_colors = {'unlabeled': (0, 0, 0),
                                 'bicycle': (119, 11, 32),
                                 'license plate': (0, 0, 142)}
 
+city_colors = list(city_classes_to_colors.values())
+
+
 def json_path_to_image_path(json_path):
     img_path = json_path.replace('/gtFine/', '/leftImg8bit/')
     img_path = img_path.replace('_gtFine_polygons.json', '_leftImg8bit' + IMAGE_EXT)
@@ -79,7 +82,7 @@ def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
         cur_files_path = INPUT_FILE
         extract_dir = os.path.join(storage_dir, get_file_name(cur_files_path))
         archive_path = os.path.join(storage_dir, get_file_name_with_ext(cur_files_path))
-        project_name = get_file_name_with_ext(INPUT_FILE)
+        project_name = get_file_name(INPUT_FILE)
 
     api.file.download(TEAM_ID, cur_files_path, archive_path)
 
@@ -155,7 +158,9 @@ def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
             if city_classes_to_colors.get(class_name, None):
                 obj_class = sly.ObjClass(name=class_name, geometry_type=sly.Polygon, color=city_classes_to_colors[class_name])
             else:
-                obj_class = sly.ObjClass(name=class_name, geometry_type=sly.Polygon, color=generate_rgb(list(city_classes_to_colors.values())))
+                new_color = generate_rgb(city_colors)
+                city_colors.append(new_color)
+                obj_class = sly.ObjClass(name=class_name, geometry_type=sly.Polygon, color=new_color)
             ann = ann.add_label(sly.Label(polygon, obj_class))
             if not obj_classes.has_key(class_name):
                 obj_classes = obj_classes.add(obj_class)
