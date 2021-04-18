@@ -2,6 +2,7 @@ import os
 import zipfile, tarfile
 import cv2
 import supervisely_lib as sly
+from pathlib import Path
 from collections import defaultdict
 from supervisely_lib.annotation.tag_meta import TagValueType
 from supervisely_lib.io.fs import download, file_exists, get_file_name, remove_dir
@@ -19,13 +20,13 @@ IMAGE_EXT = '.png'
 
 #ARH_NAMES = ['MOT15.zip', 'MOT16.zip', 'MOT17.zip', 'MOT20.zip']
 #LINKS = ['https://motchallenge.net/data/MOT15.zip', 'https://motchallenge.net/data/MOT16.zip', 'https://motchallenge.net/data/MOT17.zip', 'https://motchallenge.net/data/MOT20.zip']
-obj_class_name = 'pedestrian'
-conf_tag_name = 'ignore_conf'
-video_ext = '.mp4'
-mot_bbox_file_name = 'gt.txt'
-seqinfo_file_name = 'seqinfo.ini'
-frame_rate_default = 25
-image_name_length = 6
+#obj_class_name = 'pedestrian'
+#conf_tag_name = 'ignore_conf'
+#video_ext = '.mp4'
+#mot_bbox_file_name = 'gt.txt'
+#seqinfo_file_name = 'seqinfo.ini'
+#frame_rate_default = 25
+#image_name_length = 6
 logger = sly.logger
 
 
@@ -34,24 +35,32 @@ logger = sly.logger
 @sly.timeit
 def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
     storage_dir = my_app.data_dir
-    logger.warn(storage_dir)
-    logger.warn(INPUT_DIR)
 
     if INPUT_DIR:
         cur_files_path = INPUT_DIR
-        extract_dir = os.path.join(storage_dir, cur_files_path)
-        logger.warn(extract_dir)
-        archive_path = os.path.join(storage_dir, project_name + '.zip')
-        logger.warn(archive_path)
+        extract_dir = os.path.join(storage_dir, str(Path(cur_files_path).parent).lstrip("/"))
+        input_dir = os.path.join(extract_dir, Path(cur_files_path).name)
+        archive_path = os.path.join(storage_dir, cur_files_path.strip("/") + ".zip")
+        project_name = Path(cur_files_path).name
 
-        api.file.download(TEAM_ID, cur_files_path, archive_path)
+    logger.warn(storage_dir)
+    logger.warn(INPUT_DIR)
 
-        if zipfile.is_zipfile(archive_path):
-            logger.info('Extract archive {}'.format(archive_path))
-            with zipfile.ZipFile(archive_path, 'r') as zip_ref:
-                zip_ref.extractall(extract_dir)
-        else:
-            raise Exception("No such file".format(project_name + 'zip'))
+    #if INPUT_DIR:
+    #    cur_files_path = INPUT_DIR
+    #    extract_dir = os.path.join(storage_dir, cur_files_path)
+    #    logger.warn(extract_dir)
+    #    archive_path = os.path.join(storage_dir, project_name + '.zip')
+    #    logger.warn(archive_path)
+
+    #    api.file.download(TEAM_ID, cur_files_path, archive_path)
+
+    #    if zipfile.is_zipfile(archive_path):
+    #        logger.info('Extract archive {}'.format(archive_path))
+    #        with zipfile.ZipFile(archive_path, 'r') as zip_ref:
+    #            zip_ref.extractall(extract_dir)
+    #    else:
+    #        raise Exception("No such file".format(project_name + 'zip'))
 
     my_app.stop()
 
