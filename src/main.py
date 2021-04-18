@@ -151,6 +151,9 @@ def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
                 interiors = [obj['polygon'][5:]]
             else:
                 polygon = obj['polygon']
+                if len(polygon) < 3:
+                    logger.warn('Polygon must contain at least 3 points in ann {}, obj_class {}'.format(orig_ann_path, class_name))
+                    continue
                 interiors = []
 
             interiors = [convert_points(interior) for interior in interiors]
