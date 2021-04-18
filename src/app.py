@@ -12,7 +12,7 @@ from supervisely_lib.video_annotation.video_tag_collection import VideoTagCollec
 my_app = sly.AppService()
 TEAM_ID = int(os.environ['context.teamId'])
 WORKSPACE_ID = int(os.environ['context.workspaceId'])
-INPUT_DIR = os.environ['context.Folder']
+INPUT_DIR = str(os.environ['context.Folder'])
 #INPUT_DIR = os.environ.get("modal.state.slyFolder")
 
 project_name = 'cityscapes'
