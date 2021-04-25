@@ -1,22 +1,47 @@
-# Cityscapes Import
+<div align="center" markdown>
+<img src="https://i.imgur.com/sfh2ILA.png" width="1900px"/>
 
->The Cityscapes Dataset is intended for
-> - assessing the performance of vision algorithms for two major tasks of semantic urban scene understanding: pixel-level and instance-level semantic labeling;
-> - supporting research that aims to exploit large volumes of (weakly) annotated data, e.g. for training deep neural networks.
+# From Cityscapes to Supervisely format
 
-# HOWTO Video
+<p align="center">
+  <a href="#Overview">Overview</a> •
+  <a href="#Preparation">Preparation</a> •
+  <a href="#How-To-Run">How To Run</a> •
+  <a href="#How-To-Use">How To Use</a>
+</p>
 
-<a href="https://youtu.be/lFs5-zgPulY" target="_blank">![How to import Cityscapes](http://img.youtube.com/vi/lFs5-zgPulY/0.jpg)</a>
+[![](https://img.shields.io/badge/slack-chat-green.svg?logo=slack)](https://supervise.ly/slack)
+![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/supervisely-ecosystem/export-to-cityscapes)
+[![views](https://app.supervise.ly/public/api/v3/ecosystem.counters?repo=supervisely-ecosystem/import-mot-format(https://github.com/supervisely-ecosystem/import-cityscapes)&counter=views&label=views)](https://supervise.ly)
+[![used by teams](https://app.supervise.ly/public/api/v3/ecosystem.counters?repo=supervisely-ecosystem/import-cityscapes&counter=downloads&label=used%20by%20teams)](https://supervise.ly)
+[![runs](https://app.supervise.ly/public/api/v3/ecosystem.counters?repo=supervisely-ecosystem/import-cityscapes&counter=runs&label=runs&123)](https://supervise.ly)
 
 
-#### Usage steps:
 
-1) Download `Cityscapes` dataset from [official site](https://www.cityscapes-dataset.com/)
+## Overview
 
-2) Unpack archive
+The Cityscapes Dataset is intended for
+>- assessing the performance of vision algorithms for two major tasks of semantic urban scene understanding: pixel-level and instance-level semantic labeling;
+>- supporting research that aims to exploit large volumes of (weakly) annotated data, e.g. for training deep neural networks.
 
-3) Directory structure have to be the following:
-    
+
+
+App transforms folder or `tar` archive with images and labels in [Cityscapes](https://github.com/mcordts/cityscapesScripts) to [Supervisely format](https://docs.supervise.ly/data-organization/00_ann_format_navi) and uploads data to Supervisely Platform.
+
+
+
+## Preparation
+
+Upload images and labels in Cityscapes format to team files in `import_cityscapes` folder. It is possible to upload tar archives ([download example](https://www.cityscapes-dataset.com/downloads/)).
+
+
+
+<img src="https://i.imgur.com/e41DzWf.png"/>
+
+
+
+#### Directory structure in archive have to be the following:   
+
 ```
 .
 ├── gtFine
@@ -36,25 +61,30 @@
    
 ```
 
-4) Open [Supervisely Import](supervise.ly/import) page. Choose `Cityscapes` import plugin.
-
-5) Select one or more subdirectories (`gtFine`, `leftImg8bit`) and drag and drop them to browser.
-    
-6) Define new project name and click on `START IMPORT` button.
-
-7) After import task finish, you can view created project:
-
-    ![](https://i.imgur.com/aJELl7l.jpg)
-
-8) Also you can find more detailed information about project on `Statistics`, `Classes` and `Tags` tabs:
-    
-    ![](https://i.imgur.com/C6yW0Rw.jpg)
-
-    ![](https://i.imgur.com/D4a1RI1.png)
 
 
-## Notes:
+#### Note:
 
-* If you will drag and drop parent directory instead of its content, import will crash.
+If you will drag and drop archive with parent directory instead of its content, import will crash.
 
-* Supervisely [import documentation](https://docs.supervise.ly/import/).
+
+
+## How To Run 
+
+**Step 1**: Add app to your team from [Ecosystem](https://ecosystem.supervise.ly/apps/convert-supervisely-to-cityscapes-format) if it is not there.
+
+**Step 2**: Go to `Current Team`->`Files` page, right-click on your `.zip` archive or `import_cityscapes` folder and choose `Run App`->`import-cityscapes`. You will be redirected to `Workspace`->`Tasks` page. 
+
+<img src="https://i.imgur.com/HUG0l7S.png"/>
+
+
+
+## How to use
+
+Result project is saved your current `Workspace` with the same name as the cityscapes archive has. Images in datasets will have tags(`train`, `val`, or `test`) corresponding to the parent directories in which the datasets were located during import.
+
+<img src="https://i.imgur.com/YqAta3V.png"/>
+
+You can also access your project by clicking on it's name from `Tasks` page.
+
+<img src="https://i.imgur.com/bsEJByY.png"/>
