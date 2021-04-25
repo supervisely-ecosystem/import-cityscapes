@@ -20,15 +20,7 @@
 
 ## Overview
 
-The Cityscapes Dataset is intended for
->- assessing the performance of vision algorithms for two major tasks of semantic urban scene understanding: pixel-level and instance-level semantic labeling;
->- supporting research that aims to exploit large volumes of (weakly) annotated data, e.g. for training deep neural networks.
-
-
-
 App transforms folder or `tar` archive with images and labels in [Cityscapes](https://github.com/mcordts/cityscapesScripts) to [Supervisely format](https://docs.supervise.ly/data-organization/00_ann_format_navi) and uploads data to Supervisely Platform.
-
-
 
 ## Preparation
 
