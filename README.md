@@ -16,7 +16,7 @@
 [![used by teams](https://app.supervise.ly/public/api/v3/ecosystem.counters?repo=supervisely-ecosystem/import-cityscapes&counter=downloads&label=used%20by%20teams)](https://supervise.ly)
 [![runs](https://app.supervise.ly/public/api/v3/ecosystem.counters?repo=supervisely-ecosystem/import-cityscapes&counter=runs&label=runs&123)](https://supervise.ly)
 
-
+</div>
 
 ## Overview
 
