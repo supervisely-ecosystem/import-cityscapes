@@ -108,7 +108,8 @@ def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
         extract_dir = os.path.join(storage_dir, sly.fs.get_file_name(cur_files_path))
         archive_path = os.path.join(storage_dir, sly.fs.get_file_name_with_ext(cur_files_path))
         project_name = sly.fs.get_file_name_with_ext(INPUT_FILE)
-        input_dir = os.path.join(extract_dir, project_name)
+        input_dir = extract_dir
+        #input_dir = os.path.join(extract_dir, project_name)
 
     #logger.warn('archive_path {}, extract_dir {}, project_name {}'.format(archive_path, extract_dir, project_name))
     api.file.download(TEAM_ID, cur_files_path, archive_path)
