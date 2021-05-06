@@ -19,7 +19,7 @@
 
 ## Overview
 
-Application imports data in [Cityscapes](https://github.com/mcordts/cityscapesScripts) format to [Supervisely]([https://app.supervise.ly](https://app.supervise.ly/)) from folder or `zip` archive.
+Application imports data in [Cityscapes](https://github.com/mcordts/cityscapesScripts) format to [Supervisely](https://app.supervise.ly) from folder or `zip` archive.
 
 ## Preparation
 
