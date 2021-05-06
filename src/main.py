@@ -4,6 +4,7 @@ import supervisely_lib as sly
 import glob
 from supervisely_lib.io.fs import download, file_exists, get_file_name, get_file_name_with_ext
 from supervisely_lib.imaging.color import generate_rgb
+from pathlib import Path
 
 
 my_app = sly.AppService()
@@ -74,14 +75,18 @@ def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
     storage_dir = my_app.data_dir
 
     if INPUT_DIR:
-        logger.warn('INPUT_DIR {}'.format(INPUT_DIR))
-        project_name = PROJECT_NAME
         cur_files_path = INPUT_DIR
-        extract_dir = os.path.join(storage_dir, cur_files_path)
-        archive_path = os.path.join(storage_dir, project_name + '.zip')
+        extract_dir = os.path.join(storage_dir, str(Path(cur_files_path).parent).lstrip("/"))
+        #input_dir = os.path.join(extract_dir, Path(cur_files_path).name)
+        archive_path = os.path.join(storage_dir, cur_files_path.strip("/") + ".zip")
+        project_name = Path(cur_files_path).name
+
+        #project_name = PROJECT_NAME
+        #cur_files_path = INPUT_DIR
+        #extract_dir = os.path.join(storage_dir, cur_files_path)
+        #archive_path = os.path.join(storage_dir, project_name + '.zip')
     else:
         cur_files_path = INPUT_FILE
-        logger.warn('INPUT_FILE {}'.format(INPUT_FILE))
         extract_dir = os.path.join(storage_dir, get_file_name(cur_files_path))
         archive_path = os.path.join(storage_dir, get_file_name_with_ext(cur_files_path))
         project_name = get_file_name(INPUT_FILE)
@@ -93,7 +98,8 @@ def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
         with zipfile.ZipFile(archive_path, 'r') as zip_ref:
             zip_ref.extractall(extract_dir)
     else:
-        raise Exception("No such file".format(project_name + 'zip'))
+        raise Exception("No such file".format(INPUT_FILE))
+        #raise Exception("No such file".format(project_name + 'zip'))
 
     new_project = api.project.create(WORKSPACE_ID, project_name, change_name_if_conflict=True)
     search_fine = os.path.join(extract_dir, "gtFine", "*", "*", "*_gt*_polygons.json")
