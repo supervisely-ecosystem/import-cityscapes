@@ -1,7 +1,7 @@
 <div align="center" markdown>
 <img src="https://i.imgur.com/sfh2ILA.png" width="1900px"/>
 
-# From Cityscapes to Supervisely format
+# Import Cityscapes
 
 <p align="center">
   <a href="#Overview">Overview</a> •
@@ -20,11 +20,11 @@
 
 ## Overview
 
-App transforms folder or `tar` archive with images and labels in [Cityscapes](https://github.com/mcordts/cityscapesScripts) to [Supervisely format](https://docs.supervise.ly/data-organization/00_ann_format_navi) and uploads data to Supervisely Platform.
+Application imports data in [Cityscapes](https://github.com/mcordts/cityscapesScripts) format to [Supervisely](https://docs.supervise.ly/data-organization/00_ann_format_navi) from folder or `tar` archive.
 
 ## Preparation
 
-Upload images and labels in Cityscapes format to team files in `import_cityscapes` folder. It is possible to upload tar archives ([download example](https://www.cityscapes-dataset.com/downloads/)).
+Upload your data in Cityscapes format to `Team Files` in `import_cityscapes` folder. You can also upload data in `.tar` archive ([download example](https://www.cityscapes-dataset.com/downloads/)).
 
 
 
@@ -32,7 +32,7 @@ Upload images and labels in Cityscapes format to team files in `import_cityscape
 
 
 
-#### Directory structure in archive have to be the following:   
+#### Structure of directory or  archive have to be the following:   
 
 ```
 .
