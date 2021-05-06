@@ -9,7 +9,6 @@
   <a href="#How-To-Run">How To Run</a> •
   <a href="#How-To-Use">How To Use</a>
 </p>
-
 [![](https://img.shields.io/badge/slack-chat-green.svg?logo=slack)](https://supervise.ly/slack)
 ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/supervisely-ecosystem/export-to-cityscapes)
 [![views](https://app.supervise.ly/public/api/v3/ecosystem.counters?repo=supervisely-ecosystem/import-mot-format(https://github.com/supervisely-ecosystem/import-cityscapes)&counter=views&label=views)](https://supervise.ly)
@@ -20,11 +19,11 @@
 
 ## Overview
 
-Application imports data in [Cityscapes](https://github.com/mcordts/cityscapesScripts) format to [Supervisely](https://docs.supervise.ly/data-organization/00_ann_format_navi) from folder or `tar` archive.
+Application imports data in [Cityscapes](https://github.com/mcordts/cityscapesScripts) format to [Supervisely](https://docs.supervise.ly/data-organization/00_ann_format_navi) from folder or `zip` archive.
 
 ## Preparation
 
-Upload your data in Cityscapes format to `Team Files` in `import_cityscapes` folder. You can also upload data in `.tar` archive ([download example](https://www.cityscapes-dataset.com/downloads/)).
+Upload your data in Cityscapes format to `Team Files` in `import_cityscapes` folder. You can also upload data in `.zip` archive ([download example](https://www.cityscapes-dataset.com/downloads/)).
 
 
 

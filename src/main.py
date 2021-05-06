@@ -1,5 +1,5 @@
 import os
-import tarfile, json
+import zipfile, json
 import supervisely_lib as sly
 import glob
 from supervisely_lib.io.fs import download, file_exists, get_file_name, get_file_name_with_ext
@@ -78,7 +78,7 @@ def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
         cur_files_path = INPUT_DIR
         extract_dir = os.path.join(storage_dir, str(Path(cur_files_path).parent).lstrip("/"))
         input_dir = os.path.join(extract_dir, Path(cur_files_path).name)
-        archive_path = os.path.join(storage_dir, cur_files_path.strip("/") + ".tar")
+        archive_path = os.path.join(storage_dir, cur_files_path.strip("/") + ".zip")
         project_name = Path(cur_files_path).name
     else:
         cur_files_path = INPUT_FILE
@@ -89,9 +89,9 @@ def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
 
     api.file.download(TEAM_ID, cur_files_path, archive_path)
 
-    if tarfile.is_tarfile(archive_path):
-        with tarfile.open(archive_path) as archive:
-            archive.extractall(extract_dir)
+    if zipfile.is_zipfile(archive_path):
+        with zipfile.ZipFile(archive_path, 'r') as zip_ref:
+            zip_ref.extractall(extract_dir)
     else:
         raise Exception("No such file".format(INPUT_FILE))
 
