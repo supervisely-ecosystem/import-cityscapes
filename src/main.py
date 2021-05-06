@@ -77,7 +77,8 @@ def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
     if INPUT_DIR:
         logger.warn('INPUT_DIR {}'.format(INPUT_DIR))
         cur_files_path = INPUT_DIR
-        extract_dir = os.path.join(storage_dir, str(Path(cur_files_path).parent).lstrip("/"))
+        #extract_dir = os.path.join(storage_dir, str(Path(cur_files_path).parent).lstrip("/"))
+        extract_dir = cur_files_path
         #input_dir = os.path.join(extract_dir, Path(cur_files_path).name)
         #archive_path = os.path.join(storage_dir, cur_files_path.strip("/") + ".zip")
         archive_path = os.path.join(storage_dir, cur_files_path.split('/')[-2] + ".zip")
@@ -94,17 +95,17 @@ def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
         archive_path = os.path.join(storage_dir, get_file_name_with_ext(cur_files_path))
         project_name = get_file_name(INPUT_FILE)
 
-    logger.warn('archive_path {}, extract_dir {}, project_name {}'.format(archive_path, extract_dir, project_name))
-    api.file.download(TEAM_ID, cur_files_path, archive_path)
+        #logger.warn('archive_path {}, extract_dir {}, project_name {}'.format(archive_path, extract_dir, project_name))
+        api.file.download(TEAM_ID, cur_files_path, archive_path)
 
-    logger.warn(os.listdir(storage_dir))
-    if zipfile.is_zipfile(archive_path):
-        logger.info('Extract archive {}'.format(archive_path))
-        with zipfile.ZipFile(archive_path, 'r') as zip_ref:
-            zip_ref.extractall(extract_dir)
-    else:
-        raise Exception("No such file".format(INPUT_FILE))
-        #raise Exception("No such file".format(project_name + 'zip'))
+        logger.warn(os.listdir(storage_dir))
+        if zipfile.is_zipfile(archive_path):
+            logger.info('Extract archive {}'.format(archive_path))
+            with zipfile.ZipFile(archive_path, 'r') as zip_ref:
+                zip_ref.extractall(extract_dir)
+        else:
+            raise Exception("No such file".format(INPUT_FILE))
+            #raise Exception("No such file".format(project_name + 'zip'))
 
     new_project = api.project.create(WORKSPACE_ID, project_name, change_name_if_conflict=True)
     search_fine = os.path.join(extract_dir, "gtFine", "*", "*", "*_gt*_polygons.json")
