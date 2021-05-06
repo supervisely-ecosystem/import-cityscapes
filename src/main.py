@@ -110,7 +110,7 @@ def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
         input_dir = extract_dir
         project_name = sly.fs.get_file_name_with_ext(INPUT_FILE)
 
-        
+
     #logger.warn('archive_path {}, extract_dir {}, project_name {}'.format(archive_path, extract_dir, project_name))
     api.file.download(TEAM_ID, cur_files_path, archive_path)
 
@@ -130,6 +130,7 @@ def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
         #raise Exception("No such file".format(project_name + 'zip'))
 
     new_project = api.project.create(WORKSPACE_ID, project_name, change_name_if_conflict=True)
+    logger.warn(os.listdir(extract_dir))
     search_fine = os.path.join(extract_dir, "gtFine", "*", "*", "*_gt*_polygons.json")
     files_fine = glob.glob(search_fine)
     files_fine.sort()
