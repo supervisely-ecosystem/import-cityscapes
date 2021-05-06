@@ -75,6 +75,7 @@ def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
     storage_dir = my_app.data_dir
 
     if INPUT_DIR:
+        logger.warn('INPUT_DIR {}'.format(INPUT_DIR))
         cur_files_path = INPUT_DIR
         extract_dir = os.path.join(storage_dir, str(Path(cur_files_path).parent).lstrip("/"))
         #input_dir = os.path.join(extract_dir, Path(cur_files_path).name)
@@ -87,6 +88,7 @@ def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
         #archive_path = os.path.join(storage_dir, project_name + '.zip')
     else:
         cur_files_path = INPUT_FILE
+        logger.warn('INPUT_FILE {}'.format(INPUT_FILE))
         extract_dir = os.path.join(storage_dir, get_file_name(cur_files_path))
         archive_path = os.path.join(storage_dir, get_file_name_with_ext(cur_files_path))
         project_name = get_file_name(INPUT_FILE)
