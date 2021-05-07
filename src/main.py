@@ -206,11 +206,8 @@ def main():
         "TEAM_ID": TEAM_ID,
         "WORKSPACE_ID": WORKSPACE_ID
     })
-
-    # Run application service
     my_app.run(initial_events=[{"command": "import_cityscapes"}])
 
-
 if __name__ == '__main__':
-        sly.main_wrapper("main", main)
+    sly.main_wrapper("main", main)
 

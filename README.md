@@ -68,7 +68,7 @@ If you will drag and drop archive with parent directory instead of its content, 
 
 **Step 2**: Go to `Current Team`->`Files` page, right-click on your `.zip` archive or `folder`, containing cityscapes data and choose `Run App`->`import-cityscapes`. You will be redirected to `Workspace`->`Tasks` page. 
 
-<img src="https://i.imgur.com/EGwuQIP.png"/>
+<img src="https://i.imgur.com/J8ZkJQT.png"/>
 
 
 
