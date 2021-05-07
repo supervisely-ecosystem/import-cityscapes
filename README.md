@@ -27,7 +27,7 @@ Upload your data in Cityscapes format to `Team Files` in `import_cityscapes` fol
 
 
 
-<img src="https://i.imgur.com/AxyGfli.png" width="900px"/>
+<img src="https://i.imgur.com/MxDl6Rc.png"/>
 
 
 
@@ -66,7 +66,7 @@ If you will drag and drop archive with parent directory instead of its content, 
 
 **Step 2**: Go to `Current Team`->`Files` page, right-click on your `.zip` archive or `folder`, containing cityscapes data and choose `Run App`->`import-cityscapes`. You will be redirected to `Workspace`->`Tasks` page. 
 
-<img src="https://i.imgur.com/HUG0l7S.png" width="900px"/>
+<img src="https://i.imgur.com/EGwuQIP.png"/>
 
 
 
@@ -74,8 +74,8 @@ If you will drag and drop archive with parent directory instead of its content, 
 
 Resulting project will be placed to your current `Workspace` with the same name as the cityscapes archive. Images in datasets will have tags (`train`, `val`, or `test`) corresponding to the parent directories in which the datasets were located during import.
 
-<img src="https://i.imgur.com/7VxnyjK.png"/>
+<img src="https://i.imgur.com/xKOEyJp.png"/>
 
 You can also access your project by clicking on it's name from `Tasks` page.
 
-<img src="https://i.imgur.com/d5phaBL.png"/>
+<img src="https://i.imgur.com/bdjnzt2.png">
