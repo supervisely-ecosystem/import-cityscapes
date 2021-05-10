@@ -94,7 +94,7 @@ def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
     logger.warn('archive_path: {}'.format(archive_path))
     logger.warn('project_name: {}'.format(project_name))
     api.file.download(TEAM_ID, cur_files_path, archive_path)
-    logger.warn('cur_files_path list dir: {}'.format(os.listdir(cur_files_path)))
+    logger.warn('cur_files_path list dir: {}'.format(os.listdir(storage_dir)))
 
 
     if zipfile.is_zipfile(archive_path):
