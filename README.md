@@ -21,15 +21,15 @@
 
 ## Overview
 
-Application imports data in [Cityscapes](https://github.com/mcordts/cityscapesScripts) format to [Supervisely](https://app.supervise.ly) from folder or `zip` archive.
+Application imports data in [Cityscapes](https://github.com/mcordts/cityscapesScripts) format to [Supervisely](https://app.supervise.ly) from folder or `tar` archive.
 
 ## Preparation
 
-Upload your data in Cityscapes format to `Team Files` in `import_cityscapes` folder. You can also upload data in `.zip` archive ([download example](https://www.cityscapes-dataset.com/downloads/)).
+Upload your data in Cityscapes format to `Team Files` in `import_cityscapes` folder. You can also upload data in `.tar` archive ([download example](https://www.cityscapes-dataset.com/downloads/)).
 
 
 
-<img src="https://i.imgur.com/MGW4DuA.png"/>
+<img src="https://i.imgur.com/VcvRu9g.png"/>
 
 
 
@@ -66,9 +66,9 @@ If you will drag and drop archive with parent directory instead of its content, 
 
 **Step 1**: Add app to your team from [Ecosystem](https://ecosystem.supervise.ly/apps/import-cityscapes) if it is not there.
 
-**Step 2**: Go to `Current Team`->`Files` page, right-click on your `.zip` archive or `folder`, containing cityscapes data and choose `Run App`->`import-cityscapes`. You will be redirected to `Workspace`->`Tasks` page. 
+**Step 2**: Go to `Current Team`->`Files` page, right-click on your `.tar` archive or `folder`, containing cityscapes data and choose `Run App`->`import-cityscapes`. You will be redirected to `Workspace`->`Tasks` page. 
 
-<img src="https://i.imgur.com/p81rQ1T.png"/>
+<img src="https://i.imgur.com/ehzr3FC.png"/>
 
 
 
