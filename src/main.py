@@ -1,5 +1,5 @@
 import os
-import zipfile, json
+import zipfile, json, tarfile
 import supervisely_lib as sly
 import glob
 from supervisely_lib.io.fs import download, file_exists, get_file_name, get_file_name_with_ext
@@ -79,7 +79,7 @@ def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
         extract_dir = os.path.join(storage_dir, str(Path(cur_files_path).parent).lstrip("/"))
         input_dir = os.path.join(extract_dir, Path(cur_files_path).name)
         #archive_path = os.path.join(storage_dir, cur_files_path.strip("/") + ".zip")
-        archive_path = os.path.join(storage_dir, cur_files_path.split("/")[-2] + ".zip")
+        archive_path = os.path.join(storage_dir, cur_files_path.split("/")[-2] + ".tar")
         project_name = Path(cur_files_path).name
 
     else:
@@ -98,12 +98,17 @@ def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
     logger.warn('cur_files_path list dir: {}'.format(os.listdir(storage_dir)))
     logger.warn('{}'.format(os.path.isfile(archive_path)))
 
-
-    if zipfile.is_zipfile(archive_path):
-        with zipfile.ZipFile(archive_path, 'r') as zip_ref:
-            zip_ref.extractall(extract_dir)
+    if tarfile.is_tarfile(archive_path):
+        logger.warn('tarrr!!!')
+        with tarfile.open(archive_path) as archive:
+            archive.extractall(extract_dir)
     else:
         raise Exception("No such file".format(INPUT_FILE))
+    #if zipfile.is_zipfile(archive_path):
+    #    with zipfile.ZipFile(archive_path, 'r') as zip_ref:
+    #        zip_ref.extractall(extract_dir)
+    #else:
+    #    raise Exception("No such file".format(INPUT_FILE))
 
     new_project = api.project.create(WORKSPACE_ID, project_name, change_name_if_conflict=True)
     search_fine = os.path.join(input_dir, "gtFine", "*", "*", "*_gt*_polygons.json")
