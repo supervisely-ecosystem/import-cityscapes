@@ -76,15 +76,11 @@ def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
 
     if INPUT_DIR:
         cur_files_path = INPUT_DIR
-        logger.warn('cur_files_path: {}'.format(cur_files_path))
         extract_dir = os.path.join(storage_dir, str(Path(cur_files_path).parent).lstrip("/"))
-        logger.warn('extract_dir: {}'.format(extract_dir))
         input_dir = os.path.join(extract_dir, Path(cur_files_path).name)
-        logger.warn('input_dir: {}'.format(input_dir))
         archive_path = os.path.join(storage_dir, cur_files_path.strip("/") + ".zip")
-        logger.warn('archive_path: {}'.format(archive_path))
         project_name = Path(cur_files_path).name
-        logger.warn('project_name: {}'.format(project_name))
+
     else:
         cur_files_path = INPUT_FILE
         extract_dir = os.path.join(storage_dir, get_file_name(cur_files_path))
@@ -92,8 +88,14 @@ def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
         project_name = get_file_name(INPUT_FILE)
         input_dir = extract_dir
 
+    logger.warn('cur_files_path: {}'.format(cur_files_path))
+    logger.warn('extract_dir: {}'.format(extract_dir))
+    logger.warn('input_dir: {}'.format(input_dir))
+    logger.warn('archive_path: {}'.format(archive_path))
+    logger.warn('project_name: {}'.format(project_name))
     api.file.download(TEAM_ID, cur_files_path, archive_path)
     logger.warn('cur_files_path list dir: {}'.format(os.listdir(cur_files_path)))
+
 
     if zipfile.is_zipfile(archive_path):
         with zipfile.ZipFile(archive_path, 'r') as zip_ref:
