@@ -29,7 +29,7 @@ Upload your data in Cityscapes format to `Team Files` in `import_cityscapes` fol
 
 
 
-<img src="https://i.imgur.com/MxDl6Rc.png"/>
+<img src="https://i.imgur.com/e1uDZFy.png"/>
 
 
 
