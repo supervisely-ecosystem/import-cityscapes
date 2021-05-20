@@ -109,7 +109,7 @@ def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
         raise Exception('Input cityscapes format not correct')
 
     samples_count = len(files_fine)
-    progress = sly.Progress('Project: {!r}'.format(new_project.name), samples_count)
+    progress = sly.Progress(('Importing images'), samples_count)
 
     images_pathes_for_compare = []
     images_pathes = {}
