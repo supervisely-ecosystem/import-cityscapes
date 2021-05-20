@@ -17,10 +17,10 @@ IMAGE_EXT = '.png'
 logger = sly.logger
 
 city_classes_to_colors = {'unlabeled': (0, 0, 0),
-                                'ego vehicle': (0, 0, 0),
-                                'rectification border': (0, 0, 0),
-                                'out of roi': (0, 0, 0),
-                                'static': (0, 0, 0),
+                                'ego vehicle': (98, 15, 138),
+                                'rectification border': (15, 120, 55),
+                                'out of roi': (125, 138, 15),
+                                'static': (63, 15, 138),
                                 'dynamic': (111, 74, 0),
                                 'ground': ( 81, 0, 81),
                                 'road': (128, 64, 128),
