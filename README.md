@@ -30,7 +30,6 @@ Upload your data in Cityscapes format to `import_cityscapes` folder in `Team Fil
 <img src="https://i.imgur.com/VcvRu9g.png"/>
 
 #### Structure of directory or  archive have to be the following:   
-
 ```
 .
 ├── gtFine
@@ -47,7 +46,6 @@ Upload your data in Cityscapes format to `import_cityscapes` folder in `Team Fil
     │   ├── ...
     └── val
         └── ...
-   
 ```
 
 #### Note:
