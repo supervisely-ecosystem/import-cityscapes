@@ -25,7 +25,7 @@ Application imports data in [Cityscapes](https://github.com/mcordts/cityscapesSc
 
 ## Preparation
 
-Upload your data in Cityscapes format to `import_cityscapes` folder in `Team Files`. You can also upload data in `.tar` archive ([download example](https://www.cityscapes-dataset.com/downloads/)).
+Upload your data in Cityscapes format to `import_cityscapes` folder in `Team Files`. You can also upload data from `.tar` archive ([download example](https://www.cityscapes-dataset.com/downloads/)).
 
 
 
