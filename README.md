@@ -21,11 +21,11 @@
 
 ## Overview
 
-Application imports data in [Cityscapes](https://github.com/mcordts/cityscapesScripts) format to [Supervisely](https://app.supervise.ly) from folder or `tar` archive.
+Import data in [Cityscapes](https://github.com/mcordts/cityscapesScripts) format to [Supervisely](https://supervise.ly/) from folder or `tar` archive.
 
 ## Preparation
 
-Upload your data in Cityscapes format to `import_cityscapes` folder in `Team Files`. You can also upload data from `.tar` archive ([download example](https://www.cityscapes-dataset.com/downloads/)).
+Upload your data in Cityscapes format to `Team Files` (for example you can create `import_cityscapes` folder). You can also upload data from `.tar` archive ([download example](https://www.cityscapes-dataset.com/downloads/)).
 
 <img src="https://i.imgur.com/GZtPx4b.png"/>
 
@@ -38,7 +38,7 @@ Upload your data in Cityscapes format to `import_cityscapes` folder in `Team Fil
 │   ├── train
 │   │   ├── ...
 │   └── val
-│       ├── ...
+│       └── ...
 └── leftImg8bit
     ├── test
     │   ├── ...
