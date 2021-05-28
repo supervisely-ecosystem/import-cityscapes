@@ -1,4 +1,4 @@
-import os
+import os, random
 import zipfile, json, tarfile
 import supervisely_lib as sly
 import glob
@@ -15,8 +15,9 @@ INPUT_FILE = os.environ.get("modal.state.slyFile")
 PROJECT_NAME = 'cityscapes'
 IMAGE_EXT = '.png'
 logger = sly.logger
-samplePercent = int(os.environ['modal.state.samplePercent'])
-logger.warn('ALEX TEST: {}'.format(samplePercent))
+samplePercent = int(os.environ['modal.state.samplePercent']) / 100
+train_tag = 'train'
+val_tag = 'val'
 
 city_classes_to_colors = {
   'unlabeled': (0, 0, 0),
@@ -101,6 +102,16 @@ def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
         raise Exception("No such file".format(INPUT_FILE))
 
     new_project = api.project.create(WORKSPACE_ID, project_name, change_name_if_conflict=True)
+
+    tags_template = os.path.join(input_dir, "gtFine", "*")
+    tags_paths = glob.glob(tags_template)
+    tags = [os.path.basename(tag_path) for tag_path in tags_paths]
+
+    if train_tag in tags and val_tag not in tags:
+        split_train = True
+    else:
+        split_train = False
+
     search_fine = os.path.join(input_dir, "gtFine", "*", "*", "*_gt*_polygons.json")
     files_fine = glob.glob(search_fine)
     files_fine.sort()
@@ -142,6 +153,12 @@ def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
 
         tag_path = os.path.split(parent_dir)[0]
         train_val_tag = os.path.basename(tag_path)
+
+        if train_val_tag == train_tag and split_train is True:
+            if random.random() < samplePercent:
+                train_val_tag = val_tag
+            else:
+                train_val_tag = train_tag
 
         tag_meta = sly.TagMeta(train_val_tag, sly.TagValueType.NONE)
         if not tag_metas.has_key(tag_meta.name):
