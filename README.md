@@ -60,7 +60,9 @@ If you will drag and drop archive with parent directory instead of its content, 
 
 <img src="https://i.imgur.com/3ItAVU7.png"/>
 
-**Step 3**: Select slider value to split images in `train` folders with `train` and `val` tags(used only if `val` folders not exist).
+**Step 3**: Select slider value to split images in `train` folders with `train` and `val` tags(used only if `val` folders not exists).
+
+<img src="https://i.imgur.com/FTDdebl.png" width="600px"/>
 
 
 
