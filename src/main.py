@@ -15,6 +15,8 @@ INPUT_FILE = os.environ.get("modal.state.slyFile")
 PROJECT_NAME = 'cityscapes'
 IMAGE_EXT = '.png'
 logger = sly.logger
+samplePercent = int(os.environ['modal.state.samplePercent'])
+logger.warn('ALEX TEST: {}'.format(samplePercent))
 
 city_classes_to_colors = {
   'unlabeled': (0, 0, 0),
