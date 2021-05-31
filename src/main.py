@@ -93,7 +93,7 @@ def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
         project_name = get_file_name(INPUT_FILE)
         input_dir = extract_dir
 
-    # api.file.download(TEAM_ID, cur_files_path, archive_path)
+    api.file.download(TEAM_ID, cur_files_path, archive_path)
 
     if tarfile.is_tarfile(archive_path):
         with tarfile.open(archive_path) as archive:
@@ -229,7 +229,7 @@ def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
 
     my_app.stop()
 
-
+# @TODO: No such file or directory: '/sessions/4956/data/2644_Lemons (Annotated)_Cityscapes.tar' - bug-report
 def main():
     sly.logger.info("Script arguments", extra={
         "TEAM_ID": TEAM_ID,
