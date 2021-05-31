@@ -6,7 +6,6 @@ from supervisely_lib.io.fs import download, file_exists, get_file_name, get_file
 from supervisely_lib.imaging.color import generate_rgb
 from pathlib import Path
 
-
 my_app = sly.AppService()
 TEAM_ID = int(os.environ['context.teamId'])
 WORKSPACE_ID = int(os.environ['context.workspaceId'])
@@ -17,44 +16,45 @@ IMAGE_EXT = '.png'
 logger = sly.logger
 samplePercent = int(os.environ['modal.state.samplePercent']) / 100
 train_tag = 'train'
+trainval_tag = 'trainval'
 val_tag = 'val'
 
 city_classes_to_colors = {
-  'unlabeled': (0, 0, 0),
-  'ego vehicle': (98, 15, 138),
-  'rectification border': (15, 120, 55),
-  'out of roi': (125, 138, 15),
-  'static': (63, 15, 138),
-  'dynamic': (111, 74, 0),
-  'ground': ( 81, 0, 81),
-  'road': (128, 64, 128),
-  'sidewalk': (244, 35, 232),
-  'parking': (250, 170, 160),
-  'rail track': (230, 150, 140),
-  'building': (70, 70, 70),
-  'wall': (102, 102, 156),
-  'fence': (190, 153, 153),
-  'guard rail': (180, 165, 180),
-  'bridge': (150, 100, 100),
-  'tunnel': (150, 120, 90),
-  'pole': (153, 153, 153),
-  'polegroup': (153, 153, 153),
-  'traffic light': (250, 170, 30),
-  'traffic sign': (220, 220, 0),
-  'vegetation': (107, 142, 35),
-  'terrain': (152, 251, 152),
-  'sky': (70, 130, 180),
-  'person': (220, 20, 60),
-  'rider': (255, 0, 0),
-  'car': (0, 0, 142),
-  'truck': (0, 0, 70),
-  'bus': (0, 60, 100),
-  'caravan': (0, 0, 90),
-  'trailer': (0, 0,110),
-  'train': (0, 80, 100),
-  'motorcycle': (0, 0, 230),
-  'bicycle': (119, 11, 32),
-  'license plate': (0, 0, 142)
+    'unlabeled': (0, 0, 0),
+    'ego vehicle': (98, 15, 138),
+    'rectification border': (15, 120, 55),
+    'out of roi': (125, 138, 15),
+    'static': (63, 15, 138),
+    'dynamic': (111, 74, 0),
+    'ground': (81, 0, 81),
+    'road': (128, 64, 128),
+    'sidewalk': (244, 35, 232),
+    'parking': (250, 170, 160),
+    'rail track': (230, 150, 140),
+    'building': (70, 70, 70),
+    'wall': (102, 102, 156),
+    'fence': (190, 153, 153),
+    'guard rail': (180, 165, 180),
+    'bridge': (150, 100, 100),
+    'tunnel': (150, 120, 90),
+    'pole': (153, 153, 153),
+    'polegroup': (153, 153, 153),
+    'traffic light': (250, 170, 30),
+    'traffic sign': (220, 220, 0),
+    'vegetation': (107, 142, 35),
+    'terrain': (152, 251, 152),
+    'sky': (70, 130, 180),
+    'person': (220, 20, 60),
+    'rider': (255, 0, 0),
+    'car': (0, 0, 142),
+    'truck': (0, 0, 70),
+    'bus': (0, 60, 100),
+    'caravan': (0, 0, 90),
+    'trailer': (0, 0, 110),
+    'train': (0, 80, 100),
+    'motorcycle': (0, 0, 230),
+    'bicycle': (119, 11, 32),
+    'license plate': (0, 0, 142)
 }
 
 city_colors = list(city_classes_to_colors.values())
@@ -93,7 +93,7 @@ def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
         project_name = get_file_name(INPUT_FILE)
         input_dir = extract_dir
 
-    api.file.download(TEAM_ID, cur_files_path, archive_path)
+    # api.file.download(TEAM_ID, cur_files_path, archive_path)
 
     if tarfile.is_tarfile(archive_path):
         with tarfile.open(archive_path) as archive:
@@ -108,6 +108,8 @@ def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
     tags = [os.path.basename(tag_path) for tag_path in tags_paths]
 
     if train_tag in tags and val_tag not in tags:
+        split_train = True
+    elif trainval_tag in tags and val_tag not in tags:
         split_train = True
     else:
         split_train = False
@@ -124,7 +126,7 @@ def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
         raise Exception('Input cityscapes format not correct')
 
     samples_count = len(files_fine)
-    progress = sly.Progress(('Importing images'), samples_count)
+    progress = sly.Progress('Importing images', samples_count)
 
     images_pathes_for_compare = []
     images_pathes = {}
@@ -146,7 +148,8 @@ def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
         orig_img_path = json_path_to_image_path(orig_ann_path)
         images_pathes_for_compare.append(orig_img_path)
         if not file_exists(orig_img_path):
-            logger.warn('Image for annotation {} not found is dataset {}'.format(orig_ann_path.split('/')[-1], dataset_name))
+            logger.warn(
+                'Image for annotation {} not found is dataset {}'.format(orig_ann_path.split('/')[-1], dataset_name))
             continue
         images_pathes[dataset_name].append(orig_img_path)
         images_names[dataset_name].append(sly.io.fs.get_file_name_with_ext(orig_img_path))
@@ -154,17 +157,19 @@ def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
         tag_path = os.path.split(parent_dir)[0]
         train_val_tag = os.path.basename(tag_path)
 
-        if train_val_tag == train_tag and split_train is True:
+        if ((train_val_tag == train_tag) or (train_val_tag == trainval_tag)) and split_train is True:
             if random.random() < samplePercent:
-                train_val_tag = val_tag
-            else:
                 train_val_tag = train_tag
+            else:
+                train_val_tag = val_tag
 
-        tag_meta = sly.TagMeta(train_val_tag, sly.TagValueType.NONE)
+        # tag_meta = sly.TagMeta(train_val_tag, sly.TagValueType.NONE)
+        tag_meta = sly.TagMeta('split', sly.TagValueType.ANY_STRING)
         if not tag_metas.has_key(tag_meta.name):
             tag_metas = tag_metas.add(tag_meta)
-        tag = sly.Tag(tag_meta)
 
+        # tag = sly.Tag(tag_meta)
+        tag = sly.Tag(meta=tag_meta, value=train_val_tag)
         json_data = json.load(open(orig_ann_path))
         ann = sly.Annotation.from_img_path(orig_img_path)
 
@@ -176,14 +181,16 @@ def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
             else:
                 polygon = obj['polygon']
                 if len(polygon) < 3:
-                    logger.warn('Polygon must contain at least 3 points in ann {}, obj_class {}'.format(orig_ann_path, class_name))
+                    logger.warn('Polygon must contain at least 3 points in ann {}, obj_class {}'.format(orig_ann_path,
+                                                                                                        class_name))
                     continue
                 interiors = []
 
             interiors = [convert_points(interior) for interior in interiors]
             polygon = sly.Polygon(convert_points(polygon), interiors)
             if city_classes_to_colors.get(class_name, None):
-                obj_class = sly.ObjClass(name=class_name, geometry_type=sly.Polygon, color=city_classes_to_colors[class_name])
+                obj_class = sly.ObjClass(name=class_name, geometry_type=sly.Polygon,
+                                         color=city_classes_to_colors[class_name])
             else:
                 new_color = generate_rgb(city_colors)
                 city_colors.append(new_color)
@@ -216,9 +223,9 @@ def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
             logger.warn('Annotation not found {}'.format(im_path))
 
     logger.info('Found classes.', extra={'cnt': len(obj_classes),
-                                             'classes': sorted([obj_class.name for obj_class in obj_classes])})
+                                         'classes': sorted([obj_class.name for obj_class in obj_classes])})
     logger.info('Created tags.', extra={'cnt': len(out_meta.tag_metas),
-                                            'tags': sorted([tag_meta.name for tag_meta in out_meta.tag_metas])})
+                                        'tags': sorted([tag_meta.name for tag_meta in out_meta.tag_metas])})
 
     my_app.stop()
 
@@ -230,6 +237,6 @@ def main():
     })
     my_app.run(initial_events=[{"command": "import_cityscapes"}])
 
+
 if __name__ == '__main__':
     sly.main_wrapper("main", main)
-
