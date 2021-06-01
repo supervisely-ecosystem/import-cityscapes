@@ -98,7 +98,7 @@ def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
         archive_path = os.path.join(storage_dir, get_file_name_with_ext(cur_files_path))
         project_name = get_file_name(INPUT_FILE)
         input_dir = os.path.join(storage_dir, get_file_name(cur_files_path))  # extract_dir
-    api.file.download(TEAM_ID, cur_files_path, archive_path)
+    # api.file.download(TEAM_ID, cur_files_path, archive_path)
     if tarfile.is_tarfile(archive_path):
         with tarfile.open(archive_path) as archive:
             archive.extractall(extract_dir)
@@ -130,7 +130,9 @@ def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
     anns_data = {}
     ds_name_to_id = {}
 
-    random_train_indexes = get_split_idxs(samples_count, samplePercent)
+    if samples_count > 2:
+        random_train_indexes = get_split_idxs(samples_count, samplePercent)
+
     for idx, orig_ann_path in enumerate(files_fine):
         parent_dir, json_filename = os.path.split(os.path.abspath(orig_ann_path))
         dataset_name = os.path.basename(parent_dir)
@@ -151,11 +153,13 @@ def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
         images_names[dataset_name].append(sly.io.fs.get_file_name_with_ext(orig_img_path))
         tag_path = os.path.split(parent_dir)[0]
         train_val_tag = os.path.basename(tag_path)
-        if ((train_val_tag == train_tag) or (train_val_tag == trainval_tag)) and split_train is True:
-            if idx in random_train_indexes:
-                train_val_tag = train_tag
-            else:
-                train_val_tag = val_tag
+        if split_train is True and samples_count > 2:
+            if (train_val_tag == train_tag) or (train_val_tag == trainval_tag):
+                if idx in random_train_indexes:
+                    train_val_tag = train_tag
+                else:
+                    train_val_tag = val_tag
+
         # tag_meta = sly.TagMeta(train_val_tag, sly.TagValueType.NONE)
         tag_meta = sly.TagMeta('split', sly.TagValueType.ANY_STRING)
         if not tag_metas.has_key(tag_meta.name):
