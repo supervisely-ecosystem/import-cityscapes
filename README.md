@@ -68,7 +68,7 @@ Import will crash, if archive with parent directory doesn't contain correspondin
 
 ## How to use
 
-Resulting project will be placed to your current `Workspace` with the same name as the cityscapes archive. Images in datasets will have tags (`train`, `val`, or `test`) corresponding to the parent directories in which the datasets were located during import. If the `train` directories are in the input folders, but the `val` directories are not, then the images in `train` folder will be tagged with `train` and `val` tags in the ratio, exposed in the slider.
+Resulting project will be placed to your current `Workspace` with name in format `{task_id}_{archive/filder name}_Cityscapes`. Images in datasets will have tags (`train`, `val`, or `test`) corresponding to the parent directories in which the datasets were located during import. If input data contains `train` folder and doesn't contain `val` folder, the images from `train` folder will be tagged with `train` and `val` tags according to the exposed slider ratio.
 
 <img src="https://i.imgur.com/TMjl7Pt.png"/>
 
