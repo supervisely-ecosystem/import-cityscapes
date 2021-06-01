@@ -50,7 +50,7 @@ Upload your data in Cityscapes format to `Team Files` (for example you can creat
 
 #### Note:
 
-If you will drag and drop archive with parent directory instead of its content, import will crash.
+Import will crash, if archive with parent directory doesn't contain corresponding data.
 
 ## How To Run 
 
