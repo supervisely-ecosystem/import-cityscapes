@@ -62,7 +62,7 @@ Import will crash, if archive with parent directory doesn't contain correspondin
 
 **Step 3**: Set target slider value to split image sets to `train` and `val` and assign corresponding tags(only for case, when image set doesn't contain `val` folder). Press `RUN` button. As a result you will be redirected to `Workspace`->`Tasks` page.
 
-<img src="https://i.imgur.com/jErwlV0.png" width="600px"/>
+<img src="https://i.imgur.com/m4ew7vo.png" width="600px"/>
 
 
 
