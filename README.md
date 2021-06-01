@@ -56,11 +56,11 @@ Import will crash, if archive with parent directory doesn't contain correspondin
 
 **Step 1**: Add app to your team from [Ecosystem](https://ecosystem.supervise.ly/apps/import-cityscapes) if it is not there.
 
-**Step 2**: Go to `Current Team`->`Files` page, right-click on your `.tar` archive or `folder`, containing cityscapes data and choose `Run App`->`import-cityscapes`. You will be redirected to `Workspace`->`Tasks` page. 
+**Step 2**: Go to `Current Team`->`Files` page, right-click on your `.tar` archive or `folder`, containing cityscapes data and choose `Run App`->`import-cityscapes`. 
 
 <img src="https://i.imgur.com/3ItAVU7.png"/>
 
-**Step 3**: Set target slider value to split image sets to `train` and `val` and assign corresponding tags(only for case, when image set doesn't contain `val` folder).
+**Step 3**: Set target slider value to split image sets to `train` and `val` and assign corresponding tags(only for case, when image set doesn't contain `val` folder). You will be redirected to `Workspace`->`Tasks` page.
 
 <img src="https://i.imgur.com/jErwlV0.png" width="600px"/>
 
