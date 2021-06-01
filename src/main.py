@@ -98,7 +98,7 @@ def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
         archive_path = os.path.join(storage_dir, get_file_name_with_ext(cur_files_path))
         project_name = get_file_name(INPUT_FILE)
         input_dir = os.path.join(storage_dir, get_file_name(cur_files_path))  # extract_dir
-    # api.file.download(TEAM_ID, cur_files_path, archive_path)
+    api.file.download(TEAM_ID, cur_files_path, archive_path)
     if tarfile.is_tarfile(archive_path):
         with tarfile.open(archive_path) as archive:
             archive.extractall(extract_dir)
