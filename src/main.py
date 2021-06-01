@@ -5,6 +5,8 @@ import glob
 from supervisely_lib.io.fs import download, file_exists, get_file_name, get_file_name_with_ext
 from supervisely_lib.imaging.color import generate_rgb
 from pathlib import Path
+import numpy as np
+
 
 my_app = sly.AppService()
 TEAM_ID = int(os.environ['context.teamId'])
@@ -70,6 +72,12 @@ def convert_points(simple_points):
     return [sly.PointLocation(int(p[1]), int(p[0])) for p in simple_points]
 
 
+def get_split_idxs(num_imgs, percentage):
+    train_sample_idxs = int(np.floor(num_imgs*percentage))
+    random_idxs = random.sample(population=range(num_imgs), k=train_sample_idxs)
+    return random_idxs
+
+
 @my_app.callback("import_cityscapes")
 @sly.timeit
 def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
@@ -82,14 +90,14 @@ def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
         cur_files_path = INPUT_DIR
         extract_dir = os.path.join(storage_dir, str(Path(cur_files_path).parent).lstrip("/"))
         input_dir = os.path.join(extract_dir, Path(cur_files_path).name)
-        archive_path = os.path.join(storage_dir, cur_files_path.split("/")[-2] + ".tar")
+        archive_path = os.path.join(storage_dir, cur_files_path + ".tar")  # cur_files_path.split("/")[-2] + ".tar"
         project_name = Path(cur_files_path).name
     else:
         cur_files_path = INPUT_FILE
-        extract_dir = os.path.join(storage_dir, get_file_name(cur_files_path))
+        extract_dir = storage_dir  # os.path.join(storage_dir, get_file_name(cur_files_path))
         archive_path = os.path.join(storage_dir, get_file_name_with_ext(cur_files_path))
         project_name = get_file_name(INPUT_FILE)
-        input_dir = extract_dir
+        input_dir = os.path.join(storage_dir, get_file_name(cur_files_path))  # extract_dir
     api.file.download(TEAM_ID, cur_files_path, archive_path)
     if tarfile.is_tarfile(archive_path):
         with tarfile.open(archive_path) as archive:
@@ -121,7 +129,9 @@ def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
     images_names = {}
     anns_data = {}
     ds_name_to_id = {}
-    for orig_ann_path in files_fine:
+
+    random_train_indexes = get_split_idxs(samples_count, samplePercent)
+    for idx, orig_ann_path in enumerate(files_fine):
         parent_dir, json_filename = os.path.split(os.path.abspath(orig_ann_path))
         dataset_name = os.path.basename(parent_dir)
         if dataset_name not in dataset_names:
@@ -142,7 +152,7 @@ def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
         tag_path = os.path.split(parent_dir)[0]
         train_val_tag = os.path.basename(tag_path)
         if ((train_val_tag == train_tag) or (train_val_tag == trainval_tag)) and split_train is True:
-            if random.random() < samplePercent:
+            if idx in random_train_indexes:
                 train_val_tag = train_tag
             else:
                 train_val_tag = val_tag
