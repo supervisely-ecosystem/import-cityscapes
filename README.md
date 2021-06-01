@@ -60,7 +60,7 @@ Import will crash, if archive with parent directory doesn't contain correspondin
 
 <img src="https://i.imgur.com/3ItAVU7.png"/>
 
-**Step 3**: Select slider value to split images in `train` folders with `train` and `val` tags(used only if `val` folders not exists).
+**Step 3**: Set target slider value to split image sets to `train` and `val` and assign corresponding tags(only for case, when image set doesn't contain `val` folder).
 
 <img src="https://i.imgur.com/FTDdebl.png" width="600px"/>
 
