@@ -1,5 +1,5 @@
 <div align="center" markdown>
-<img src="https://i.imgur.com/sfh2ILA.png" width="1900px"/>
+<img src="https://github.com/supervisely-ecosystem/import-cityscapes/assets/57998637/359774eb-c9bf-41ec-a414-37bdc2f3bc6b" width="1900px"/>
 
 # Import Cityscapes
 
