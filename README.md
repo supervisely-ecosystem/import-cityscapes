@@ -24,11 +24,13 @@ Import data in [Cityscapes](https://github.com/mcordts/cityscapesScripts) format
 
 ## Preparation
 
-Upload your data in Cityscapes format to `Team Files` (for example you can create `import_cityscapes` folder). You can also upload data from `.tar` archive ([download example](https://www.cityscapes-dataset.com/downloads/)).
+Upload your data as a project folder in Cityscapes format to `Team Files`.
 
-<img src="https://i.imgur.com/GZtPx4b.png"/>
+You can also upload data as `.tar` archive ([download example](https://www.cityscapes-dataset.com/downloads/)).
 
-#### The structure of the directory or archive has to be the following:
+<img src="https://github.com/supervisely-ecosystem/import-cityscapes/assets/57998637/2bc7ec24-6efb-4ade-95ca-7204aee22d0e"/>
+
+#### The structure of the project has to be the following:
 
 ```
 📦project folder or .tar archive
@@ -48,9 +50,7 @@ Upload your data in Cityscapes format to `Team Files` (for example you can creat
         └──...
 ```
 
-#### Note:
-
-Import will crash if the archive with the parent directory doesn't contain corresponding data.
+⚠️ **Note:** Import will crash if the archive with the parent directory doesn't contain corresponding data.
 
 ## How To Run 
 
@@ -58,11 +58,18 @@ Import will crash if the archive with the parent directory doesn't contain corre
 
 **Step 2**: Go to the `Team Files` page, right-click on your `.tar` archive or `folder`, containing cityscapes data, and choose `Run App`->`Import Cityscapes`. 
 
-<img src="https://i.imgur.com/3ItAVU7.png"/>
+<img src="https://github.com/supervisely-ecosystem/import-cityscapes/assets/57998637/a5f78d65-cc15-4936-8975-e084d2a411af"/>
+
+Another way to import is to find the app page in Ecosystem and click `RUN APP...` button. Then you will see a modal window.
+
+<img src="https://github.com/supervisely-ecosystem/import-cityscapes/assets/57998637/b4d11cb2-a71b-48ae-8985-7b8128b62ec5">
+
+
+There you can drag-and-drop projects or choose from `Team Files` too.
+
+<img width="394" alt="ecosystem" src="https://github.com/supervisely-ecosystem/import-cityscapes/assets/57998637/234d6e49-8d2b-4a9e-9959-49406b419572">
 
 **Step 3**: Set target slider value to split image sets to `train` and `val` and assign corresponding tags(only for cases, when the image set doesn't contain `val` folder). Press the `RUN` button. As a result, you will be redirected to `Workspace Tasks` page.
-
-<img src="https://i.imgur.com/m4ew7vo.png" width="600px"/>
 
 
 
@@ -70,8 +77,8 @@ Import will crash if the archive with the parent directory doesn't contain corre
 
 The resulting project will be placed in your current `Workspace` with name in format `{archive/folder name}`. Images in datasets will have tags (`train`, `val`, or `test`) corresponding to the parent directories in which the datasets were located during import. If input data(archive or folder) contains `train` folder and doesn't contain `val` folder, the images from `train` folder will be tagged with `train` and `val` tags according to the exposed slider ratio.
 
-<img src="https://i.imgur.com/TMjl7Pt.png"/>
+<img src="https://github.com/supervisely-ecosystem/import-cityscapes/assets/57998637/145c3230-f9a6-4e86-bdf8-ef8174fd3729"/>
 
 You can also access your project by clicking on its name from the `Workspace Tasks` page.
 
-<img src="https://i.imgur.com/i0pfXRV.png">
+<img src="https://github.com/supervisely-ecosystem/import-cityscapes/assets/57998637/abc7b486-c4ad-432a-b536-6e32846f3ca1">
