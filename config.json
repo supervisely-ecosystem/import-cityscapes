@@ -1,6 +1,7 @@
 {
   "name": "Import Cityscapes",
   "type": "app",
+  "headless": true,
   "categories": ["import", "images"],
   "description": "Import Cityscapes to Supervisely",
   "docker_image": "supervisely/import-export:0.0.5",
