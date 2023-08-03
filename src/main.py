@@ -104,7 +104,7 @@ def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
                 archive.extractall(extract_path)
             data_path = extract_path
         else:
-            raise ValueError(f"Invalid file format. Expected file in '.tar' format.")
+            raise ValueError("Invalid file format. Expected file in '.tar' format.")
 
     new_project = api.project.create(WORKSPACE_ID, project_name, change_name_if_conflict=True)
     tags_template = os.path.join(data_path, "gtFine", "*")
