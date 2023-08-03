@@ -81,4 +81,4 @@ The resulting project will be placed in your current `Workspace` with name in fo
 
 You can also access your project by clicking on its name from the `Workspace Tasks` page.
 
-<img src="https://github.com/supervisely-ecosystem/import-cityscapes/assets/57998637/abc7b486-c4ad-432a-b536-6e32846f3ca1">
+<img src="https://github.com/supervisely-ecosystem/import-cityscapes/assets/57998637/b5ed75cd-4003-4469-9be7-bfdf8931217b">
