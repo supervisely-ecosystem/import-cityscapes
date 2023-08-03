@@ -1,25 +1,20 @@
 {
-    "name": "Import Cityscapes",
-    "type": "app",
-    "categories": [
-        "import",
-        "images"
-    ],
-    "description": "Import Cityscapes to Supervisely",
-    "docker_image": "supervisely/import-export:0.0.5",
-    "main_script": "src/main.py",
-    "modal_template": "src/modal.html",
-    "modal_template_state": {
-        "samplePercent": 80
-    },
-    "task_location": "workspace_tasks",
-    "icon": "https://i.imgur.com/UzgppSx.png",
-    "icon_background": "#FFFFFF",
-    "context_menu": {
-        "target": [
-            "files_folder",
-            "files_file"
-        ]
-    },
-    "poster": "https://i.imgur.com/sfh2ILA.png"
+  "name": "Import Cityscapes",
+  "type": "app",
+  "headless": true,
+  "categories": ["import", "images"],
+  "description": "Import Cityscapes to Supervisely",
+  "docker_image": "supervisely/import-export:0.0.5",
+  "main_script": "src/main.py",
+  "modal_template": "src/modal.html",
+  "modal_template_state": {
+    "samplePercent": 80
+  },
+  "task_location": "workspace_tasks",
+  "icon": "https://github.com/supervisely-ecosystem/import-cityscapes/assets/57998637/bb1ee6d2-46f4-4246-9840-ed5b523b8e64",
+  "icon_background": "#FFFFFF",
+  "context_menu": {
+    "target": ["files_folder", "files_file"]
+  },
+  "poster": "https://github.com/supervisely-ecosystem/import-cityscapes/assets/57998637/359774eb-c9bf-41ec-a414-37bdc2f3bc6b"
 }
