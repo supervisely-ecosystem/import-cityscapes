@@ -1,9 +1,11 @@
-import os, random
-import json, tarfile
+import os
+import random
+import shutil
+import json
 import supervisely as sly
 import glob
 import numpy as np
-from supervisely.io.fs import file_exists, get_file_name, get_file_name_with_ext
+from supervisely.io.fs import file_exists, get_file_name, get_file_name_with_ext, silent_remove
 from supervisely.imaging.color import generate_rgb
 from pathlib import Path
 from dotenv import load_dotenv
@@ -99,12 +101,12 @@ def import_cityscapes(api: sly.Api, task_id, context, state, app_logger):
         api.file.download(TEAM_ID, INPUT_FILE, data_path)
         extract_path = os.path.join(os.path.dirname(data_path), project_name)
 
-        if tarfile.is_tarfile(data_path):
-            with tarfile.open(data_path) as archive:
-                archive.extractall(extract_path)
+        try:
+            shutil.unpack_archive(data_path, extract_path)
+            silent_remove(data_path)
             data_path = extract_path
-        else:
-            raise ValueError("Invalid file format. Expected file in '.tar' format.")
+        except ValueError as e:
+            raise ValueError("Invalid file format. Expected file is not an archive.")
 
     new_project = api.project.create(WORKSPACE_ID, project_name, change_name_if_conflict=True)
     tags_template = os.path.join(data_path, "gtFine", "*")
