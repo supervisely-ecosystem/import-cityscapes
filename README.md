@@ -20,20 +20,20 @@
 
 ## Overview
 
-Import data in [Cityscapes](https://github.com/mcordts/cityscapesScripts) format to [Supervisely](https://supervise.ly/) from a folder or `.tar` archive.
+Import data in [Cityscapes](https://github.com/mcordts/cityscapesScripts) format to [Supervisely](https://supervise.ly/) from a folder or archive.
 
 ## Preparation
 
 Upload your data as a project folder in Cityscapes format to `Team Files`.
 
-You can also upload data as `.tar` archive ([download example](https://www.cityscapes-dataset.com/downloads/)).
+You can also upload data as an archive ([download example](https://www.cityscapes-dataset.com/downloads/)).
 
 <img src="https://github.com/supervisely-ecosystem/import-cityscapes/assets/57998637/2bc7ec24-6efb-4ade-95ca-7204aee22d0e"/>
 
 #### The structure of the project has to be the following:
 
 ```
-📦project folder or .tar archive
+📦project folder or archive
 ├──📂gtFine
 │   ├──📂test
 │   │   └──...
@@ -56,7 +56,7 @@ You can also upload data as `.tar` archive ([download example](https://www.citys
 
 **Step 1**: Add the app to your team from [Ecosystem](https://ecosystem.supervise.ly/apps/import-cityscapes) if it is not there.
 
-**Step 2**: Go to the `Team Files` page, right-click on your `.tar` archive or `folder`, containing cityscapes data, and choose `Run App`->`Import Cityscapes`. 
+**Step 2**: Go to the `Team Files` page, right-click on your archive or `folder`, containing cityscapes data, and choose `Run App`->`Import Cityscapes`. 
 
 <img src="https://github.com/supervisely-ecosystem/import-cityscapes/assets/57998637/a5f78d65-cc15-4936-8975-e084d2a411af"/>
 
