@@ -4,7 +4,7 @@
   "headless": true,
   "categories": ["import", "images"],
   "description": "Import Cityscapes to Supervisely",
-  "docker_image": "supervisely/import-export:0.0.5",
+  "docker_image": "supervisely/import-export:6.72.112",
   "main_script": "src/main.py",
   "modal_template": "src/modal.html",
   "modal_template_state": {
