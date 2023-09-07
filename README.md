@@ -24,9 +24,8 @@ Import data in [Cityscapes](https://github.com/mcordts/cityscapesScripts) format
 
 ## Preparation
 
-Upload your data as a project folder in Cityscapes format to `Team Files`.
-
-You can also upload data as an archive ([download example](https://www.cityscapes-dataset.com/downloads/)).
+Upload your data as a project folder in Cityscapes format to `Team Files`.<br>
+ℹ️ You can download the archive with data example [here](https://github.com/supervisely-ecosystem/import-cityscapes/files/12547999/my_cityscapes_project.zip).<br>
 
 <img src="https://github.com/supervisely-ecosystem/import-cityscapes/assets/57998637/2bc7ec24-6efb-4ade-95ca-7204aee22d0e"/>
 
