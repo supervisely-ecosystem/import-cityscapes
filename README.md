@@ -11,16 +11,16 @@
 </p>
 
 
-[![](https://img.shields.io/badge/slack-chat-green.svg?logo=slack)](https://supervise.ly/slack)
+[![](https://img.shields.io/badge/slack-chat-green.svg?logo=slack)](https://supervisely.com/slack)
 ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/supervisely-ecosystem/import-cityscapes)
-[![views](https://app.supervise.ly/img/badges/views/supervisely-ecosystem/import-cityscapes.png)](https://supervise.ly)
-[![runs](https://app.supervise.ly/img/badges/runs/supervisely-ecosystem/import-cityscapes.png)](https://supervise.ly)
+[![views](https://app.supervisely.com/img/badges/views/supervisely-ecosystem/import-cityscapes.png)](https://supervisely.com)
+[![runs](https://app.supervisely.com/img/badges/runs/supervisely-ecosystem/import-cityscapes.png)](https://supervisely.com)
 
 </div>
 
 ## Overview
 
-Import data in [Cityscapes](https://github.com/mcordts/cityscapesScripts) format to [Supervisely](https://supervise.ly/) from a folder or archive.
+Import data in [Cityscapes](https://github.com/mcordts/cityscapesScripts) format to [Supervisely](https://supervisely.com/) from a folder or archive.
 
 ## Preparation
 
@@ -53,7 +53,7 @@ Upload your data as a project folder in Cityscapes format to `Team Files`.<br>
 
 ## How To Run 
 
-**Step 1**: Add the app to your team from [Ecosystem](https://ecosystem.supervise.ly/apps/import-cityscapes) if it is not there.
+**Step 1**: Add the app to your team from [Ecosystem](https://ecosystem.supervisely.com/apps/import-cityscapes) if it is not there.
 
 **Step 2**: Go to the `Team Files` page, right-click on your archive or `folder`, containing cityscapes data, and choose `Run App`->`Import Cityscapes`. 
 
