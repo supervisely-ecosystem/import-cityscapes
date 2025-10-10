@@ -53,7 +53,7 @@ Upload your data as a project folder in Cityscapes format to `Team Files`.<br>
 
 ## How To Run 
 
-**Step 1**: Add the app to your team from [Ecosystem](https://ecosystem.supervisely.com/apps/import-cityscapes) if it is not there.
+**Step 1**: Add the app to your team from [Ecosystem](../../../../supervisely-ecosystem/import-cityscapes) if it is not there.
 
 **Step 2**: Go to the `Team Files` page, right-click on your archive or `folder`, containing cityscapes data, and choose `Run App`->`Import Cityscapes`. 
 
