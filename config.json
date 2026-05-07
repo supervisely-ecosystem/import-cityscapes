@@ -7,7 +7,7 @@
     "images"
   ],
   "description": "Import Cityscapes to Supervisely",
-  "docker_image": "supervisely/import-export:6.73.162",
+  "docker_image": "supervisely/base-py-sdk-hardened:6.73.564",
   "main_script": "src/main.py",
   "modal_template": "src/modal.html",
   "modal_template_state": {
@@ -23,5 +23,5 @@
     ]
   },
   "poster": "https://github.com/supervisely-ecosystem/import-cityscapes/assets/57998637/359774eb-c9bf-41ec-a414-37bdc2f3bc6b",
-  "min_instance_version": "6.11.8"
+  "instance_version": "6.15.60"
 }
